@@ -19,16 +19,17 @@
 ```js
 import canReflect from "can-reflect";
 import canValue from "can-value";
+import SimpleMap from "can-simple-map";
 
-const map = {
-  parent: {
-    childName: "Alexis"
-  }
-};
+const outer = new SimpleMap({
+  inner: new SimpleMap({
+    key: "hello"
+  })
+});
 
-const childNameObservable = canValue.from(map, "parent.childName");
-// canReflect.getValue(childNameObservable) === "Alexis"
+const keyObservable = canValue.from(outer, "inner.key");
+// canReflect.getValue(keyObservable) === "hello"
 
-canReflect.setValue(childNameObservable, "Taylor");
+canReflect.setValue(keyObservable, "aloha");
 // Error thrown because the value isn’t settable
 ```

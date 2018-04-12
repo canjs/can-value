@@ -38,10 +38,12 @@
   "dependencies": {
     "can-key": "<2.0.0",
     "can-observation": "^4.0.0",
-    "can-simple-observable": "^2.1.0-pre.1"
+    "can-reflect": "^1.4.0",
+    "can-reflect-dependencies": "^1.0.0",
+    "can-simple-observable": "^2.1.0-pre.2"
   },
   "devDependencies": {
-    "can-reflect": "^1.13.4",
+    "can-simple-map": "^4.0.1",
     "jshint": "^2.9.1",
     "steal": "^1.6.5",
     "steal-qunit": "^1.0.1",

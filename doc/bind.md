@@ -19,16 +19,17 @@
 ```js
 import canReflect from "can-reflect";
 import canValue from "can-value";
+import SimpleMap from "can-simple-map";
 
-const map = {
-  parent: {
-    childName: "Alexis"
-  }
-};
+const outer = new SimpleMap({
+  inner: new SimpleMap({
+    key: "hello"
+  })
+});
 
-const childNameObservable = canValue.bind(map, "parent.childName");
-// canReflect.getValue(childNameObservable) === "Alexis"
+const keyObservable = canValue.bind(outer, "inner.key");
+// canReflect.getValue(keyObservable) === "hello"
 
-canReflect.setValue(childNameObservable, "Taylor");
-// map.parent.childName === "Taylor"
+canReflect.setValue(keyObservable, "aloha");
+// outer.inner.key === "aloha"
 ```
