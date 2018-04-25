@@ -4,6 +4,8 @@ var canReflect = require("can-reflect");
 var canReflectDeps = require("can-reflect-dependencies");
 var SimpleMap = require("can-simple-map");
 
+var onlyDevTest = steal.isEnv("production") ? QUnit.skip : QUnit.test;
+
 QUnit.module('can-value');
 
 QUnit.test("bind method works", function() {
@@ -35,17 +37,17 @@ QUnit.test("from method works", function() {
 	QUnit.ok(errorThrown instanceof Error, "setting doesn’t work");
 });
 
-QUnit.test("from method returns an observation with a helpful name", function() {
+onlyDevTest("from method returns an observation with a helpful name", function() {
 	var outer = {inner: {key: "hello"}};
 	var observation = canValue.from(outer, "inner.key");
 	QUnit.equal(
 		canReflect.getName(observation),
-		"CanValueFromObservation<Object{}.inner.key>",
+		"Observation<ValueFrom<Object{}.inner.key>>",
 		"observation has the correct name"
 	);
 });
 
-QUnit.test("from method observable has dependency data", function(assert) {
+onlyDevTest("from method observable has dependency data", function(assert) {
 	var outer = new SimpleMap({inner: new SimpleMap({key: "hello"})});
 	var observation = canValue.from(outer, "inner.key");
 
@@ -106,27 +108,21 @@ QUnit.test("to method works", function() {
 	var outer = {inner: {key: "hello"}};
 	var setProp = canValue.to(outer, "inner.key");
 
-	// Getting the value shouldn’t work
-	QUnit.equal(canReflect.getValue(setProp), undefined, "getting doesn’t work");
+	// Getting the value shouldn’t work; canReflect.getValue will return what you
+	// passed to it if it can’t get the value
+	QUnit.equal(canReflect.getValue(setProp), setProp, "getting the value doesn’t work");
 
 	// Test setting the value
 	canReflect.setValue(setProp, "aloha");
 	QUnit.equal(outer.inner.key, "aloha", "setting works");
 });
 
-QUnit.test("to method returns an observable with a helpful name", function() {
-	var outer = {inner: {key: "hello"}};
-	var observable = canValue.to(outer, "inner.key");
-	QUnit.equal(
-		canReflect.getName(observable),
-		"CanValueToObservable<Object{}.inner.key>",
-		"observable has the correct name"
-	);
-});
-
-QUnit.test("to method observable has dependency data", function(assert) {
+onlyDevTest("to method observable has dependency data", function(assert) {
 	var outer = new SimpleMap({inner: new SimpleMap({key: "hello"})});
 	var observable = canValue.to(outer, "inner.key");
+
+	// The observation returned by to() must be bound before it returns dependency data
+	canReflect.onValue(observable, function() {});
 
 	// Check outer.inner’s dependency data
 	var innerDepData = canReflectDeps.getDependencyDataOf(outer, "inner");
@@ -182,6 +178,22 @@ QUnit.test("to method observable works when the keys change", function(assert) {
 	canReflect.setValue(observable, "ciao");
 	QUnit.equal(newInner.get("key"), "ciao", "setting works after changing the inner object");
 	QUnit.equal(originalInner.get("key"), "hello", "the original inner object is untouched");
+});
+
+onlyDevTest("to method observable works when the keys change - dependency data", function(assert) {
+	var originalInner = new SimpleMap({key: "hello"});
+	var outer = new SimpleMap({inner: originalInner});
+	var observable = canValue.to(outer, "inner.key");
+
+	// The observation returned by to() must be bound before it returns dependency data
+	canReflect.onValue(observable, function() {});
+
+	// Change the value of a key along the path
+	var newInner = new SimpleMap({key: "aloha"});
+	outer.set("inner", newInner);
+
+	// Set the value
+	canReflect.setValue(observable, "ciao");
 
 	// Check outer.inner’s dependency data
 	var innerDepData = canReflectDeps.getDependencyDataOf(outer, "inner");

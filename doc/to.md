@@ -28,7 +28,7 @@ const outer = new SimpleMap({
 });
 
 const keyObservable = canValue.to(outer, "inner.key");
-// canReflect.getValue(keyObservable) returns undefined
+// canReflect.getValue(keyObservable) returns keyObservable
 
 canReflect.setValue(keyObservable, "aloha");
 // outer.inner.key === "aloha"

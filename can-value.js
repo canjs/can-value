@@ -1,7 +1,5 @@
 var canKey = require("can-key");
-var canKeyUtils = require("can-key/utils");
 var canReflect = require("can-reflect");
-var canReflectDependencies = require("can-reflect-dependencies");
 var keyObservable = require("can-simple-observable/key/key");
 var Observation = require("can-observation");
 
@@ -11,70 +9,54 @@ module.exports = {
 	},
 
 	from: function(object, keyPath) {
-		var observation = new Observation(function() {
+		var observationFunction = function() {
 			return canKey.get(object, keyPath);
-		});
+		};
 
-		canReflect.assignSymbols(observation, {
-			"can.getName": function getName() {
-				var objectName = canReflect.getName(object);
-				return "CanValueFromObservation<" + objectName + "." + keyPath + ">";
-			}
+		//!steal-remove-start
+		var objectName = canReflect.getName(object);
+		Object.defineProperty(observationFunction, "name", {
+			value: "ValueFrom<" + objectName + "." + keyPath + ">"
 		});
+		//!steal-remove-end
 
-		return observation;
+		return new Observation(observationFunction);
 	},
 
 	to: function(object, keyPath) {
-		var keyPathParts = canKeyUtils.parts(keyPath);
-		var lastIndex = keyPathParts.length - 1;
-		var lastKey;// This stores the last part of the keyPath, e.g. “key” in “outer.inner.key”
-		var lastParent;// This stores the object that the last key is on, e.g. “outer.inner” in outer: {inner: {"key": "value"}}
-		var observable = {};
+		var observable = keyObservable(object, keyPath);
 
-		// Walk the object path to set up the dependency/mutation data
-		var previousKeyData;
-		canKey.walk(object, keyPathParts, function(keyData, i) {
-			if (i === lastIndex) {
-				// observable is mutating keyData.parent
-				lastKey = keyData.key;
-				lastParent = keyData.parent;
-				canReflectDependencies.addMutatedBy(lastParent, lastKey, observable);
-
-				canReflect.onKeyValue(previousKeyData.parent, previousKeyData.key, function(newValue, oldValue) {
-					canReflectDependencies.deleteMutatedBy(oldValue, lastKey, observable);
-					canReflectDependencies.addMutatedBy(newValue, lastKey, observable);
-					lastParent = newValue;
-				});
+		//!steal-remove-start
+		canReflect.assignSymbols(observable.onDependencyChange, {
+			"can.getChangesDependencyRecord": function getChangesDependencyRecord() {
+				// can-simple-observable/key/ creates an observation that walks along
+				// the keyPath. In doing so, it implicitly registers the objects and
+				// keys along the path as mutators of the observation; this means
+				// getDependencyDataOf(...an object and key along the path) returns
+				// whatIChange.derive.valueDependencies = [observable], which is not
+				// true! The observable does not derive its value from the objects
+				// along the keyPath. By implementing getChangesDependencyRecord and
+				// returning undefined, calls to can.getWhatIChange() for any objects
+				// along the keyPath will not include the observable.
 			}
-			previousKeyData = keyData;
 		});
-		previousKeyData = undefined;// No longer needed
+		//!steal-remove-end
 
 		return canReflect.assignSymbols(observable, {
-			"can.getName": function getName() {
-				var objectName = canReflect.getName(object);
-				return "CanValueToObservable<" + objectName + "." + keyPath + ">";
-			},
 
-			"can.getValue": function getValue() {
-				// This is intentionally left blank
-			},
+			// Remove the getValue symbol so the observable is only a setter
+			"can.getValue": null,
 
-			// Register what observable changes
-			"can.getWhatIChange": function getWhatIChange() {
-				return {
-					mutate: {
-						keyDependencies: new Map([
-							[lastParent, new Set([lastKey])]
-						])
-					}
-				};
-			},
-
-			"can.setValue": function setValue(newValue) {
-				canKey.set(object, keyPath, newValue);
+			//!steal-remove-start
+			"can.getValueDependencies": function getValueDependencies() {
+				// Normally, getDependencyDataOf(observable) would include
+				// whatChangesMe.derive.keyDependencies, and it would contain
+				// the object and anything along keyPath. This symbol returns
+				// undefined because this observable does not derive its value
+				// from the object or anything along the keyPath, it only
+				// mutates the last object in the keyPath.
 			}
+			//!steal-remove-end
 		});
 	}
 };
