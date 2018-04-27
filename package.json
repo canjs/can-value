@@ -14,9 +14,9 @@
   },
   "scripts": {
     "build": "node build.js",
-    "jshint": "jshint ./*.js ./src/ --config",
+    "jshint": "jshint ./*.js --config",
     "test": "npm run jshint && npm run testee",
-    "testee": "testee test.html --browsers firefox",
+    "testee": "testee test/test.html --browsers firefox",
     "preversion": "npm test && npm run build",
     "version": "git commit -am \"Update version number\" && git checkout -b release && git add -f dist/",
     "postpublish": "git push --tags && git checkout master && git branch -D release && git push",
@@ -35,8 +35,15 @@
       "testee"
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+    "can-key": "<2.0.0",
+    "can-observation": "^4.0.0",
+    "can-reflect": "^1.4.0",
+    "can-simple-observable": "^2.1.0-pre.2"
+  },
   "devDependencies": {
+    "can-reflect-dependencies": "^1.0.0",
+    "can-simple-map": "^4.0.1",
     "jshint": "^2.9.1",
     "steal": "^1.6.5",
     "steal-qunit": "^1.0.1",

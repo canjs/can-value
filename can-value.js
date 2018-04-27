@@ -1,1 +1,62 @@
-module.exports = {};
+var canKey = require("can-key");
+var canReflect = require("can-reflect");
+var keyObservable = require("can-simple-observable/key/key");
+var Observation = require("can-observation");
+
+module.exports = {
+	bind: function(object, keyPath) {
+		return keyObservable(object, keyPath);
+	},
+
+	from: function(object, keyPath) {
+		var observationFunction = function() {
+			return canKey.get(object, keyPath);
+		};
+
+		//!steal-remove-start
+		var objectName = canReflect.getName(object);
+		Object.defineProperty(observationFunction, "name", {
+			value: "ValueFrom<" + objectName + "." + keyPath + ">"
+		});
+		//!steal-remove-end
+
+		return new Observation(observationFunction);
+	},
+
+	to: function(object, keyPath) {
+		var observable = keyObservable(object, keyPath);
+
+		//!steal-remove-start
+		canReflect.assignSymbols(observable.onDependencyChange, {
+			"can.getChangesDependencyRecord": function getChangesDependencyRecord() {
+				// can-simple-observable/key/ creates an observation that walks along
+				// the keyPath. In doing so, it implicitly registers the objects and
+				// keys along the path as mutators of the observation; this means
+				// getDependencyDataOf(...an object and key along the path) returns
+				// whatIChange.derive.valueDependencies = [observable], which is not
+				// true! The observable does not derive its value from the objects
+				// along the keyPath. By implementing getChangesDependencyRecord and
+				// returning undefined, calls to can.getWhatIChange() for any objects
+				// along the keyPath will not include the observable.
+			}
+		});
+		//!steal-remove-end
+
+		return canReflect.assignSymbols(observable, {
+
+			// Remove the getValue symbol so the observable is only a setter
+			"can.getValue": null,
+
+			//!steal-remove-start
+			"can.getValueDependencies": function getValueDependencies() {
+				// Normally, getDependencyDataOf(observable) would include
+				// whatChangesMe.derive.keyDependencies, and it would contain
+				// the object and anything along keyPath. This symbol returns
+				// undefined because this observable does not derive its value
+				// from the object or anything along the keyPath, it only
+				// mutates the last object in the keyPath.
+			}
+			//!steal-remove-end
+		});
+	}
+};
