@@ -1,7 +1,7 @@
 @module {Object} can-value
 @package ./package.json
 @parent can-observables
-@collection can-infrastructure
+@collection can-core
 @description Get an observable that’s bound to a specific property on another object.
 @group can-value/methods methods
 
