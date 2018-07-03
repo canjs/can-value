@@ -1,9 +1,10 @@
 var canKey = require("can-key");
 var canReflect = require("can-reflect");
 var keyObservable = require("can-simple-observable/key/key");
+var namespace = require("can-namespace");
 var Observation = require("can-observation");
 
-module.exports = {
+module.exports = namespace.value = {
 	bind: function(object, keyPath) {
 		return keyObservable(object, keyPath);
 	},
