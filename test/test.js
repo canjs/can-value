@@ -104,6 +104,34 @@ onlyDevTest("from method observable has dependency data", function(assert) {
 	);
 });
 
+QUnit.test("fromValue method works", function() {
+	var observable = canValue.fromValue(15);
+
+	// Test getting the value
+	QUnit.equal(canReflect.getValue(observable), 15, "getting works");
+
+	// Test setting the value
+	canReflect.setValue(observable, 22);
+	QUnit.equal(canReflect.getValue(observable), 22, "setting works");
+});
+
+QUnit.test("returnedBy method works", function() {
+	var person = new SimpleMap({
+		first: "Grace",
+		last: "Murray"
+	});
+	var observable = canValue.returnedBy(function() {
+		return person.get("first") + " " + person.get("last");
+	});
+
+	// Test getting the value
+	QUnit.equal(canReflect.getValue(observable), "Grace Murray", "getting works");
+
+	// Test setting the value
+	person.set("last", "Hopper");
+	QUnit.equal(canReflect.getValue(observable), "Grace Hopper", "setting works");
+});
+
 QUnit.test("to method works", function() {
 	var outer = {inner: {key: "hello"}};
 	var setProp = canValue.to(outer, "inner.key");

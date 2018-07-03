@@ -2,6 +2,7 @@ var canKey = require("can-key");
 var canReflect = require("can-reflect");
 var keyObservable = require("can-simple-observable/key/key");
 var Observation = require("can-observation");
+var SimpleObservable = require("can-simple-observable");
 
 module.exports = {
 	bind: function(object, keyPath) {
@@ -22,6 +23,14 @@ module.exports = {
 		}
 		//!steal-remove-end
 
+		return new Observation(observationFunction);
+	},
+
+	fromValue: function(initialValue) {
+		return new SimpleObservable(initialValue);
+	},
+
+	returnedBy: function(observationFunction) {
 		return new Observation(observationFunction);
 	},
 
