@@ -10,14 +10,14 @@
   @param {String} keyPath A String of dot-separated keys, representing a path of properties.
 
   @return {Object} An observable compatible with [can-reflect.getValue can-reflect.getValue()]
-  and [can-reflect.setValue can-reflect.setValue()].
+  and [can-reflect.setValue can-reflect.setValue()]; it also has a `value` property that can
+  be used to get and set the value.
 
 @body
 
 ## Use
 
 ```js
-import canReflect from "can-reflect";
 import canValue from "can-value";
 import SimpleMap from "can-simple-map";
 
@@ -28,8 +28,8 @@ const outer = new SimpleMap({
 });
 
 const keyObservable = canValue.bind(outer, "inner.key");
-// canReflect.getValue(keyObservable) === "hello"
+// keyObservable.value === "hello"
 
-canReflect.setValue(keyObservable, "aloha");
+keyObservable.value = "aloha";
 // outer.inner.key === "aloha"
 ```
