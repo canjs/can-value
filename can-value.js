@@ -4,6 +4,7 @@ var canReflect = require("can-reflect");
 var keyObservable = require("can-simple-observable/key/key");
 var namespace = require("can-namespace");
 var Observation = require("can-observation");
+var SimpleObservable = require("can-simple-observable");
 
 module.exports = namespace.value = {
 	bind: function(object, keyPath) {
@@ -24,6 +25,10 @@ module.exports = namespace.value = {
 		}
 		//!steal-remove-end
 
+		return new Observation(observationFunction);
+	},
+
+	returnedBy: function(observationFunction) {
 		return new Observation(observationFunction);
 	},
 
@@ -67,5 +72,9 @@ module.exports = namespace.value = {
 		//!steal-remove-end
 
 		return canReflect.assignSymbols(observable, symbolsToAssign);
+	},
+
+	with: function(initialValue) {
+		return new SimpleObservable(initialValue);
 	}
 };
