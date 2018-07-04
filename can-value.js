@@ -28,10 +28,6 @@ module.exports = namespace.value = {
 		return new Observation(observationFunction);
 	},
 
-	fromValue: function(initialValue) {
-		return new SimpleObservable(initialValue);
-	},
-
 	returnedBy: function(observationFunction) {
 		return new Observation(observationFunction);
 	},
@@ -76,5 +72,9 @@ module.exports = namespace.value = {
 		//!steal-remove-end
 
 		return canReflect.assignSymbols(observable, symbolsToAssign);
+	},
+
+	with: function(initialValue) {
+		return new SimpleObservable(initialValue);
 	}
 };

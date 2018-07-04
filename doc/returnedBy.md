@@ -3,7 +3,7 @@
 
 @description Creates an observable that derives its value from other observable values.
 
-@signature `canValue.returnedBy( getter )`
+@signature `value.returnedBy( getter )`
 
 Creates an observable value that can be read and observed using [can-reflect].
 
@@ -12,7 +12,7 @@ The following creates a `fullName` observable that derives its values from the
 
 ```js
 import canReflect from "can-reflect";
-import canValue from "can-value";
+import value from "can-value";
 import observe from "can-observe";
 
 const person = observe( { first: "Grace", last: "Murray" } );
@@ -33,6 +33,6 @@ canReflect.offValue(observable, handler);
 
 @param {function} getter A function that returns the value being observed.
 
-@return {Object} An observable compatible with [can-reflect.getValue can-reflect.getValue()]
-and [can-reflect.setValue can-reflect.setValue()]; it also has a `value` property that can
+@return {Object} An observable compatible with [can-reflect.getValue]
+and [can-reflect.setValue]; it also has a `value` property that can
 be used to get and set the value.

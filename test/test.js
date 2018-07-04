@@ -104,8 +104,8 @@ onlyDevTest("from method observable has dependency data", function(assert) {
 	);
 });
 
-QUnit.test("fromValue method works", function() {
-	var observable = canValue.fromValue(15);
+QUnit.test("with method works", function() {
+	var observable = canValue.with(15);
 
 	// Test getting the value
 	QUnit.equal(canReflect.getValue(observable), 15, "getting works");

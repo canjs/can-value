@@ -1,16 +1,16 @@
-@function can-value.fromValue fromValue
+@function can-value.with with
 @parent can-value/methods
 
 @description Creates an observable value from an initial value.
 
-@signature `canValue.fromValue( initialValue )`
+@signature `value.with( initialValue )`
 
 Creates an observable value that can be read, written, and observed using [can-reflect].
 
 ```js
-import canValue from "can-value";
+import value from "can-value";
 
-const observable = canValue.fromValue("one");
+const observable = value.with("one");
 
 canReflect.getValue(observable); // is "one"
 observable.value; // is "one"
@@ -32,6 +32,6 @@ canReflect.offValue(observable, handler);
 
 @param {*} initialValue The initial value of the observable.
 
-@return {Object} An observable compatible with [can-reflect.getValue can-reflect.getValue()]
-and [can-reflect.setValue can-reflect.setValue()]; it also has a `value` property that can
+@return {Object} An observable compatible with [can-reflect.getValue]
+and [can-reflect.setValue]; it also has a `value` property that can
 be used to get and set the value.
