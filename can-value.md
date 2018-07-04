@@ -28,20 +28,20 @@
 
 Use `can-value` when you need an observable that can get or set a property on an object.
 
-In the example below, we use [can-value.bind can-value.bind()] to get an observable that
+In the example below, we use [can-value.bind] to get an observable that
 can get _and_ set `outer.inner.key`:
 
 ```js
-import canValue from "can-value";
-import SimpleMap from "can-simple-map";
+import DefineMap from "can-define/map/map";
+import value from "can-value";
 
-const outer = new SimpleMap({
-  inner: new SimpleMap({
+const outer = new DefineMap({
+  inner: {
     key: "hello"
-  })
+  }
 });
 
-const keyObservable = canValue.bind(outer, "inner.key");
+const keyObservable = value.bind(outer, "inner.key");
 ```
 
 Now if we read `keyObservable.value`, we get the value at `outer.inner.key`:
@@ -57,5 +57,5 @@ keyObservable.value = "aloha";
 // Now outer.inner.key === "aloha"
 ```
 
-[can-value.from can-value.from()] and [can-value.to can-value.to()] exist to create
+[can-value.from] and [can-value.to] exist to create
 observables that just get or just set properties on an object, respectively.
