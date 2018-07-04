@@ -1,3 +1,4 @@
+"use strict";
 var canKey = require("can-key");
 var canReflect = require("can-reflect");
 var keyObservable = require("can-simple-observable/key/key");
