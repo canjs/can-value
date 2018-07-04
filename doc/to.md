@@ -3,33 +3,33 @@
 
 @description Get an observable for setting (but not getting) a property on an object.
 
-@signature `canValue.to( object, keyPath )`
+@signature `value.to( object, keyPath )`
+
+In the example below, a `keyObservable` is created that is one-way bound to the
+value at `outer.inner.key`. When `keyObservable.value` changes,
+`outer.inner.key` is updated, but changes to `outer.inner.key` do not update
+`keyObservable.value`.
+
+```js
+import DefineMap from "can-define/map/map";
+import value from "can-value";
+
+const outer = new DefineMap({
+  inner: {
+    key: "hello"
+  }
+});
+
+const keyObservable = value.to(outer, "inner.key");
+
+keyObservable.value = "aloha";
+// outer.inner.key === "aloha"
+```
 
   @param {Object} object The object from which to read.
 
   @param {String} keyPath A String of dot-separated keys, representing a path of properties.
 
-  @return {Object} An observable compatible with [can-reflect.setValue can-reflect.setValue()]
-  but not [can-reflect.getValue can-reflect.getValue()].
-
-@body
-
-## Use
-
-```js
-import canReflect from "can-reflect";
-import canValue from "can-value";
-import SimpleMap from "can-simple-map";
-
-const outer = new SimpleMap({
-  inner: new SimpleMap({
-    key: "hello"
-  })
-});
-
-const keyObservable = canValue.to(outer, "inner.key");
-// canReflect.getValue(keyObservable) returns keyObservable
-
-canReflect.setValue(keyObservable, "aloha");
-// outer.inner.key === "aloha"
-```
+  @return {Object} An observable compatible with [can-reflect.setValue]
+  but not [can-reflect.getValue]; it also has a `value` property that
+  can be used to set the value.
