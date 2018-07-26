@@ -53,6 +53,7 @@ when the observable value changes:
 const handler = function(newValue) {
   newValue; // is 22
 };
+
 canReflect.onValue(observable, handler);
 observable.value = 22;
 ```
@@ -76,6 +77,7 @@ const person = observe( { first: "Grace", last: "Murray" } );
 const fullName = value.returnedBy( function() {
 	return person.first + " " + person.last;
 } );
+
 fullName.value; // is "Grace Murray"
 ```
 
@@ -87,6 +89,7 @@ observable derives its value changed):
 const handler = function(newValue) {
   newValue; // is "Grace Hopper"
 };
+
 canReflect.onValue(fullName, handler);
 person.last = "Hopper";
 ```
