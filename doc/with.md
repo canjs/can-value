@@ -5,33 +5,34 @@
 
 @signature `value.with( initialValue )`
 
-Creates an observable value that can be read, written, and observed using [can-reflect].
+  Creates an observable value that can be read, written, and observed using [can-reflect].
 
-```js
-import value from "can-value";
+  ```js
+  import {value, Reflect as canReflect} from "can";
 
-const observable = value.with("one");
+  const observable = value.with("one");
 
-canReflect.getValue(observable); // is "one"
-observable.value; // is "one"
+  console.log( canReflect.getValue(observable) ); //-> "one"
+  console.log( observable.value ); //-> "one"
 
-canReflect.setValue(observable, "two");
-observable.value; // is "two"
+  canReflect.setValue(observable, "two");
+  console.log( observable.value ); //-> "two"
 
-observable.value = "three";
-observable.value; // is "three"
+  observable.value = "three";
+  console.log( observable.value ); //-> "three"
 
-const handler = function(newValue) {
-  newValue; // is "four"
-};
-canReflect.onValue(observable, handler);
-observable.value = "four";
+  const handler = function(newValue) {
+    console.log( newValue ); //-> "four"
+  };
+  canReflect.onValue(observable, handler);
+  observable.value = "four";
 
-canReflect.offValue(observable, handler);
-```
+  canReflect.offValue(observable, handler);
+  ```
+  @codepen
 
-@param {*} initialValue The initial value of the observable.
+  @param {*} initialValue The initial value of the observable.
 
-@return {Object} An observable compatible with [can-reflect.getValue]
-and [can-reflect.setValue]; it also has a `value` property that can
-be used to get and set the value.
+  @return {Object} An observable compatible with [can-reflect.getValue]
+  and [can-reflect.setValue]; it also has a `value` property that can
+  be used to get and set the value.

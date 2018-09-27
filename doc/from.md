@@ -5,27 +5,32 @@
 
 @signature `value.from( object, keyPath )`
 
-In the example below, a `keyObservable` is created that is one-way bound to the
-value at `outer.inner.key`. When `outer.inner.key` changes,
-`keyObservable.value` is updated, but changes to `keyObservable.value` do not
-update `outer.inner.key`.
+  In the example below, a `keyObservable` is created that is one-way bound to the
+  value at `outer.inner.key`. When `outer.inner.key` changes,
+  `keyObservable.value` is updated, but changes to `keyObservable.value` do not
+  update `outer.inner.key`.
 
-```js
-import DefineMap from "can-define/map/map";
-import value from "can-value";
+  ```js
+  import {DefineMap, value} from "can";
 
-const outer = new DefineMap({
-  inner: {
-    key: "hello"
+  const outer = new DefineMap({
+    inner: {
+      key: "hello"
+    }
+  });
+
+  const keyObservable = value.from(outer, "inner.key");
+  console.log( keyObservable.value ); //-> "hello"
+
+  try {
+    keyObservable.value = "aloha";
+  } catch(error) {
+    // Error thrown because the value isn't settable
+    console.log(error.message); //-> "Cannot set property value
+    // of #<Observation> which has only a getter"
   }
-});
-
-const keyObservable = value.from(outer, "inner.key");
-// keyObservable.value === "hello"
-
-keyObservable.value = "aloha";
-// Error thrown because the value isn’t settable
-```
+  ```
+  @codepen
 
   @param {Object} object The object from which to read.
 
