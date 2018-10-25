@@ -102,7 +102,7 @@ last.value = "Hopper";
 
 ```
 @codepen
-@highlight 5-7, 15
+@highlight 6-9, 16
 
 ### Bind to other objects
 
