@@ -10,7 +10,25 @@
   The following creates a `fullName` observable that derives its values from the
   `person` observable. The value of the observable is read with `fullName.value`:
 
-  @sourceref ./examples/observableFullName.js
+  ```js
+  import {value, Reflect as canReflect} from "can";
+
+  const first = value.with("Grace");
+  const last = value.with("Murray");
+
+  const fullName = value.returnedBy( () => {
+    return first.value + " " + last.value;
+  } );
+
+  console.log( fullName.value ); //-> "Grace Murray"
+
+  const handler = newValue => {
+    console.log( newValue ); //-> "Grace Hopper"
+  };
+
+  canReflect.onValue(fullName, handler);
+  last.value = "Hopper";
+  ```
   @codepen
 
   @param {function} getter A function that returns the value being observed.

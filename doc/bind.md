@@ -9,7 +9,25 @@
   value at `outer.inner.key`. When `keyObservable.value` changes,
   `outer.inner.key` is updated, and vice versa.
 
-  @sourceref ./examples/observableObject.js
+  ```js
+  import {DefineMap, value} from "can";
+
+  const outer = new DefineMap({
+    inner: {
+      key: "hello"
+    }
+  });
+
+  const keyObservable = value.bind(outer, "inner.key");
+
+  // reading `keyObservable.value`, we get the value at `outer.inner.key`
+  console.log( keyObservable.value ); //-> "hello"
+
+  // writing to `keyObservable.value` will change the value at `outer.inner.key`
+  keyObservable.value = "aloha";
+  console.log( outer.inner.key ); //->"aloha"
+
+  ```
   @codepen
 
   @param {Object} object The object from which to read.
