@@ -12,20 +12,20 @@
 
 ```js
 {
-    bind(object, keyPath)
-    // Returns an observable for getting and setting a property on an object.
+  bind(object, keyPath)
+  // Returns an observable for getting and setting a property on an object.
 
-    from(object, keyPath)
-    // Returns an observable for only getting a property on an object.
+  from(object, keyPath)
+  // Returns an observable for only getting a property on an object.
 
-    returnedBy(getter)
-    // Creates an observable that derives its value from other observable values.
+  returnedBy(getter)
+  // Creates an observable that derives its value from other observable values.
 
-    to(object, keyPath)
-    // Returns an observable for only setting a property on an object.
+  to(object, keyPath)
+  // Returns an observable for only setting a property on an object.
 
-    with(initialValue)
-    // Creates an observable with an initial value that can be read, written, and observed.
+  with(initialValue)
+  // Creates an observable with an initial value that can be read, written, and observed.
 }
 ```
 
@@ -36,63 +36,73 @@
 ### Observable from an initial value
 
 At its simplest, [can-value.with] can be used to
-create an observable from another initial value:
+create an observable from another initial value.
+As how an `age` observable being created in this next example:
 
 ```js
-import value from "can-value";
+import {value, Reflect as canReflect} from "can";
 
-const observable = value.with(15);
+const age = value.with(15);
 
-observable.value; // is 15
+console.log( age.value ); //-> 15
 ```
+@codepen
+@highlight 3
 
-You can use [can-reflect/observe.onValue] to listen for
-when the observable value changes:
+Notice that [can-reflect/observe.onValue] can be used
+to listen to changes. The following shows creating an 
+`age` observable, reading it's value, then listening when 
+`age` changes:
 
 ```js
-const handler = function(newValue) {
-  newValue; // is 22
+import {value, Reflect as canReflect} from "can";
+
+const age = value.with(15);
+
+const handler = newValue => {
+  console.log( newValue ); //-> 18 ... time to Vote!
 };
 
 canReflect.onValue(observable, handler);
-observable.value = 22;
+age.value = 18;
+
 ```
+@codepen
+@highlight 9
 
 ### Observable derived from other values
 
 [can-value.returnedBy] can be used to create an
 observable value that derives its value from other observable values. When the
-derived values change, the observable’s value will be updated automatically.
+derived values change, the observable's value will be updated automatically.
 
 The following creates a `fullName` observable that derives its values from the
-`person` observable. The value of the observable is read with `fullName.value`:
+`first` and `last` observables. The value of the observable is read with `fullName.value`.
+Notice how [can-reflect/observe.onValue] is used to listen when the observable value changes.
+When one of the values from which the observable derives its value changed:
 
 ```js
-import canReflect from "can-reflect";
-import observe from "can-observe";
-import value from "can-value";
+import {value, Reflect as canReflect} from "can";
 
-const person = observe( { first: "Grace", last: "Murray" } );
+const first = value.with("Grace");
+const last = value.with("Murray");
 
-const fullName = value.returnedBy( function() {
-	return person.first + " " + person.last;
+const fullName = value.returnedBy( () => {
+  return first.value + " " + last.value;
 } );
 
-fullName.value; // is "Grace Murray"
-```
+console.log( fullName.value ); //-> "Grace Murray"
 
-You can use [can-reflect/observe.onValue] to listen for
-when the observable value changes (because one of the values from which the
-observable derives its value changed):
-
-```js
-const handler = function(newValue) {
-  newValue; // is "Grace Hopper"
+const handler = newValue => {
+  console.log( newValue ); //-> "Grace Hopper"
 };
 
 canReflect.onValue(fullName, handler);
-person.last = "Hopper";
+last.value = "Hopper";
+
 ```
+@codepen
+@highlight 5-7, 15
 
 ### Bind to other objects
 
@@ -102,8 +112,7 @@ In the example below, we use [can-value.bind] to get an observable that
 can get _and_ set `outer.inner.key`:
 
 ```js
-import DefineMap from "can-define/map/map";
-import value from "can-value";
+import {DefineMap, value} from "can";
 
 const outer = new DefineMap({
   inner: {
@@ -112,20 +121,15 @@ const outer = new DefineMap({
 });
 
 const keyObservable = value.bind(outer, "inner.key");
-```
 
-Now if we read `keyObservable.value`, we get the value at `outer.inner.key`:
+// reading `keyObservable.value`, we get the value at `outer.inner.key`
+console.log( keyObservable.value ); //-> "hello"
 
-```js
-keyObservable.value; // is "hello"
-```
-
-We can also set `keyObservable.value` to change the value at `outer.inner.key`:
-
-```js
+// writing to `keyObservable.value` will change the value at `outer.inner.key`
 keyObservable.value = "aloha";
-// Now outer.inner.key === "aloha"
+console.log( outer.inner.key ); //->"aloha"
 ```
+@codepen
 
 [can-value.from] and [can-value.to] exist to create
 observables that just get or just set properties on an object, respectively.

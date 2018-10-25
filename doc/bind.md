@@ -5,26 +5,30 @@
 
 @signature `value.bind( object, keyPath )`
 
-In the example below, a `keyObservable` is created that is two-way bound to the
-value at `outer.inner.key`. When `keyObservable.value` changes,
-`outer.inner.key` is updated, and vice versa.
+  In the example below, a `keyObservable` is created that is two-way bound to the
+  value at `outer.inner.key`. When `keyObservable.value` changes,
+  `outer.inner.key` is updated, and vice versa.
 
-```js
-import DefineMap from "can-define/map/map";
-import value from "can-value";
+  ```js
+  import {DefineMap, value} from "can";
 
-const outer = new DefineMap({
-  inner: {
-    key: "hello"
-  }
-});
+  const outer = new DefineMap({
+    inner: {
+      key: "hello"
+    }
+  });
 
-const keyObservable = value.bind(outer, "inner.key");
-// keyObservable.value === "hello"
+  const keyObservable = value.bind(outer, "inner.key");
 
-keyObservable.value = "aloha";
-// outer.inner.key === "aloha"
-```
+  // reading `keyObservable.value`, we get the value at `outer.inner.key`
+  console.log( keyObservable.value ); //-> "hello"
+
+  // writing to `keyObservable.value` will change the value at `outer.inner.key`
+  keyObservable.value = "aloha";
+  console.log( outer.inner.key ); //->"aloha"
+
+  ```
+  @codepen
 
   @param {Object} object The object from which to read.
 
