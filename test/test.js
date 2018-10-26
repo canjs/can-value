@@ -40,11 +40,21 @@ QUnit.test("from method works", function() {
 onlyDevTest("from method returns an observation with a helpful name", function() {
 	var outer = {inner: {key: "hello"}};
 	var observation = canValue.from(outer, "inner.key");
-	QUnit.equal(
-		canReflect.getName(observation),
-		"Observation<ValueFrom<Object{}.inner.key>>",
-		"observation has the correct name"
-	);
+	var fn = function() {};
+
+	if(fn.name) {
+		QUnit.equal(
+			canReflect.getName(observation),
+			"Observation<ValueFrom<Object{}.inner.key>>",
+			"observation has the correct name"
+		);
+	} else {
+		QUnit.equal(
+			fn.name,
+			undefined,
+			"function in IE11 dont have a name property"
+		);
+	}
 });
 
 onlyDevTest("from method observable has dependency data", function(assert) {
