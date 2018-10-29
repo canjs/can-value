@@ -6,6 +6,11 @@ var SimpleMap = require("can-simple-map");
 
 var onlyDevTest = steal.isEnv("production") ? QUnit.skip : QUnit.test;
 
+var supportsFunctionNames = (function() {
+	var fn = function() {};
+	return !!fn.name;
+}());
+
 QUnit.module('can-value');
 
 QUnit.test("bind method works", function() {
@@ -37,25 +42,18 @@ QUnit.test("from method works", function() {
 	QUnit.ok(errorThrown instanceof Error, "setting doesn’t work");
 });
 
-onlyDevTest("from method returns an observation with a helpful name", function() {
-	var outer = {inner: {key: "hello"}};
-	var observation = canValue.from(outer, "inner.key");
-	var fn = function() {};
-
-	if(fn.name) {
+if (supportsFunctionNames) {
+	onlyDevTest("from method returns an observation with a helpful name", function() {
+		var outer = {inner: {key: "hello"}};
+		var observation = canValue.from(outer, "inner.key");
+		
 		QUnit.equal(
-			canReflect.getName(observation),
-			"Observation<ValueFrom<Object{}.inner.key>>",
-			"observation has the correct name"
+				canReflect.getName(observation),
+				"Observation<ValueFrom<Object{}.inner.key>>",
+				"observation has the correct name"
 		);
-	} else {
-		QUnit.equal(
-			fn.name,
-			undefined,
-			"function in IE11 dont have a name property"
-		);
-	}
-});
+	});
+}
 
 onlyDevTest("from method observable has dependency data", function(assert) {
 	var outer = new SimpleMap({inner: new SimpleMap({key: "hello"})});
