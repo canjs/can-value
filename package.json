@@ -1,6 +1,6 @@
 {
   "name": "can-value",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Observable values from other CanJS observables.",
   "homepage": "https://canjs.com/doc/can-value.html",
   "repository": {
