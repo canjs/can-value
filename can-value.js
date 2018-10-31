@@ -5,6 +5,7 @@ var keyObservable = require("can-simple-observable/key/key");
 var namespace = require("can-namespace");
 var Observation = require("can-observation");
 var SimpleObservable = require("can-simple-observable");
+var SettableObservable = require("can-simple-observable/settable/settable");
 
 module.exports = namespace.value = {
 	bind: function(object, keyPath) {
@@ -28,8 +29,12 @@ module.exports = namespace.value = {
 		return new Observation(observationFunction);
 	},
 
-	returnedBy: function(observationFunction) {
-		return new Observation(observationFunction);
+	returnedBy: function(getter, context, initialValue) {
+		if(getter.length === 1) {
+			return new SettableObservable(getter, context, initialValue);
+		} else {
+			return new Observation(getter, context);
+		}
 	},
 
 	to: function(object, keyPath) {

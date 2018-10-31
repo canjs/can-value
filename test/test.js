@@ -46,7 +46,7 @@ if (supportsFunctionNames) {
 	onlyDevTest("from method returns an observation with a helpful name", function() {
 		var outer = {inner: {key: "hello"}};
 		var observation = canValue.from(outer, "inner.key");
-		
+
 		QUnit.equal(
 				canReflect.getName(observation),
 				"Observation<ValueFrom<Object{}.inner.key>>",
@@ -138,6 +138,28 @@ QUnit.test("returnedBy method works", function() {
 	// Test setting the value
 	person.set("last", "Hopper");
 	QUnit.equal(canReflect.getValue(observable), "Grace Hopper", "setting works");
+});
+
+QUnit.test("returnedBy(getter(lastSet)) method works", function() {
+	var person = new SimpleMap({
+		first: "Grace",
+		last: "Murray"
+	});
+	var observable = canValue.returnedBy(function(lastSet) {
+		return person.get("first") + lastSet + person.get("last");
+	}, null, " ");
+
+	// Test getting the value
+	QUnit.equal(canReflect.getValue(observable), "Grace Murray", "getting works");
+
+	// Test setting the value
+	person.set("last", "Hopper");
+	QUnit.equal(canReflect.getValue(observable), "Grace Hopper", "setting dep works");
+
+	observable.value = " J ";
+
+	QUnit.equal(observable.value, "Grace J Hopper", "setting works");
+
 });
 
 QUnit.test("to method works", function() {
