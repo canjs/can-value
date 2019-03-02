@@ -5,8 +5,6 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/canjs/can-value/blob/master/LICENSE)
 [![npm version](https://badge.fury.io/js/can-value.svg)](https://www.npmjs.com/package/can-value)
 [![Travis build status](https://travis-ci.org/canjs/can-value.svg?branch=master)](https://travis-ci.org/canjs/can-value)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/canjs/can-value?branch=master&svg=true)](https://ci.appveyor.com/project/matthewp/can-value)
-[![Coverage status](https://coveralls.io/repos/github/canjs/can-value/badge.svg?branch=master)](https://coveralls.io/github/canjs/can-value?branch=master)
 [![Greenkeeper badge](https://badges.greenkeeper.io/canjs/can-value.svg)](https://greenkeeper.io/)
 
 Observable values from other CanJS observables.
