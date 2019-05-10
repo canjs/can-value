@@ -18,11 +18,11 @@ QUnit.test("bind method works", function() {
 	var observable = canValue.bind(outer, "inner.key");
 
 	// Test getting the value
-	QUnit.equal(canReflect.getValue(observable), "hello", "getting works");
+	assert.equal(canReflect.getValue(observable), "hello", "getting works");
 
 	// Test setting the value
 	canReflect.setValue(observable, "aloha");
-	QUnit.equal(outer.get("inner").get('key'), "aloha", "setting works");
+	assert.equal(outer.get("inner").get('key'), "aloha", "setting works");
 });
 
 QUnit.test("from method works", function() {
@@ -30,7 +30,7 @@ QUnit.test("from method works", function() {
 	var observation = canValue.from(outer, "inner.key");
 
 	// Test getting the value
-	QUnit.equal(canReflect.getValue(observation), "hello", "getting works");
+	assert.equal(canReflect.getValue(observation), "hello", "getting works");
 
 	// Setting the value shouldn’t work
 	var errorThrown;
@@ -39,7 +39,7 @@ QUnit.test("from method works", function() {
 	} catch (error) {
 		errorThrown = error;
 	}
-	QUnit.ok(errorThrown instanceof Error, "setting doesn’t work");
+	assert.ok(errorThrown instanceof Error, "setting doesn’t work");
 });
 
 if (supportsFunctionNames) {
@@ -47,7 +47,7 @@ if (supportsFunctionNames) {
 		var outer = {inner: {key: "hello"}};
 		var observation = canValue.from(outer, "inner.key");
 
-		QUnit.equal(
+		assert.equal(
 				canReflect.getName(observation),
 				"Observation<ValueFrom<Object{}.inner.key>>",
 				"observation has the correct name"
@@ -116,11 +116,11 @@ QUnit.test("with method works", function() {
 	var observable = canValue.with(15);
 
 	// Test getting the value
-	QUnit.equal(canReflect.getValue(observable), 15, "getting works");
+	assert.equal(canReflect.getValue(observable), 15, "getting works");
 
 	// Test setting the value
 	canReflect.setValue(observable, 22);
-	QUnit.equal(canReflect.getValue(observable), 22, "setting works");
+	assert.equal(canReflect.getValue(observable), 22, "setting works");
 });
 
 QUnit.test("returnedBy method works", function() {
@@ -133,11 +133,11 @@ QUnit.test("returnedBy method works", function() {
 	});
 
 	// Test getting the value
-	QUnit.equal(canReflect.getValue(observable), "Grace Murray", "getting works");
+	assert.equal(canReflect.getValue(observable), "Grace Murray", "getting works");
 
 	// Test setting the value
 	person.set("last", "Hopper");
-	QUnit.equal(canReflect.getValue(observable), "Grace Hopper", "setting works");
+	assert.equal(canReflect.getValue(observable), "Grace Hopper", "setting works");
 });
 
 QUnit.test("returnedBy(getter(lastSet)) method works", function() {
@@ -150,15 +150,15 @@ QUnit.test("returnedBy(getter(lastSet)) method works", function() {
 	}, null, " ");
 
 	// Test getting the value
-	QUnit.equal(canReflect.getValue(observable), "Grace Murray", "getting works");
+	assert.equal(canReflect.getValue(observable), "Grace Murray", "getting works");
 
 	// Test setting the value
 	person.set("last", "Hopper");
-	QUnit.equal(canReflect.getValue(observable), "Grace Hopper", "setting dep works");
+	assert.equal(canReflect.getValue(observable), "Grace Hopper", "setting dep works");
 
 	observable.value = " J ";
 
-	QUnit.equal(observable.value, "Grace J Hopper", "setting works");
+	assert.equal(observable.value, "Grace J Hopper", "setting works");
 
 });
 
@@ -168,11 +168,11 @@ QUnit.test("to method works", function() {
 
 	// Getting the value shouldn’t work; canReflect.getValue will return what you
 	// passed to it if it can’t get the value
-	QUnit.equal(canReflect.getValue(setProp), setProp, "getting the value doesn’t work");
+	assert.equal(canReflect.getValue(setProp), setProp, "getting the value doesn’t work");
 
 	// Test setting the value
 	canReflect.setValue(setProp, "aloha");
-	QUnit.equal(outer.inner.key, "aloha", "setting works");
+	assert.equal(outer.inner.key, "aloha", "setting works");
 });
 
 onlyDevTest("to method observable has dependency data", function(assert) {
@@ -234,8 +234,8 @@ QUnit.test("to method observable works when the keys change", function(assert) {
 
 	// Test setting the value
 	canReflect.setValue(observable, "ciao");
-	QUnit.equal(newInner.get("key"), "ciao", "setting works after changing the inner object");
-	QUnit.equal(originalInner.get("key"), "hello", "the original inner object is untouched");
+	assert.equal(newInner.get("key"), "ciao", "setting works after changing the inner object");
+	assert.equal(originalInner.get("key"), "hello", "the original inner object is untouched");
 });
 
 onlyDevTest("to method observable works when the keys change - dependency data", function(assert) {
