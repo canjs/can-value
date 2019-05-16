@@ -13,7 +13,7 @@ var supportsFunctionNames = (function() {
 
 QUnit.module('can-value');
 
-QUnit.test("bind method works", function() {
+QUnit.test("bind method works", function(assert) {
 	var outer = new SimpleMap({inner: new SimpleMap({key: "hello"})});
 	var observable = canValue.bind(outer, "inner.key");
 
@@ -25,7 +25,7 @@ QUnit.test("bind method works", function() {
 	assert.equal(outer.get("inner").get('key'), "aloha", "setting works");
 });
 
-QUnit.test("from method works", function() {
+QUnit.test("from method works", function(assert) {
 	var outer = {inner: {key: "hello"}};
 	var observation = canValue.from(outer, "inner.key");
 
@@ -43,7 +43,7 @@ QUnit.test("from method works", function() {
 });
 
 if (supportsFunctionNames) {
-	onlyDevTest("from method returns an observation with a helpful name", function() {
+	onlyDevTest("from method returns an observation with a helpful name", function(assert) {
 		var outer = {inner: {key: "hello"}};
 		var observation = canValue.from(outer, "inner.key");
 
@@ -112,7 +112,7 @@ onlyDevTest("from method observable has dependency data", function(assert) {
 	);
 });
 
-QUnit.test("with method works", function() {
+QUnit.test("with method works", function(assert) {
 	var observable = canValue.with(15);
 
 	// Test getting the value
@@ -123,7 +123,7 @@ QUnit.test("with method works", function() {
 	assert.equal(canReflect.getValue(observable), 22, "setting works");
 });
 
-QUnit.test("returnedBy method works", function() {
+QUnit.test("returnedBy method works", function(assert) {
 	var person = new SimpleMap({
 		first: "Grace",
 		last: "Murray"
@@ -140,7 +140,7 @@ QUnit.test("returnedBy method works", function() {
 	assert.equal(canReflect.getValue(observable), "Grace Hopper", "setting works");
 });
 
-QUnit.test("returnedBy(getter(lastSet)) method works", function() {
+QUnit.test("returnedBy(getter(lastSet)) method works", function(assert) {
 	var person = new SimpleMap({
 		first: "Grace",
 		last: "Murray"
@@ -162,7 +162,7 @@ QUnit.test("returnedBy(getter(lastSet)) method works", function() {
 
 });
 
-QUnit.test("to method works", function() {
+QUnit.test("to method works", function(assert) {
 	var outer = {inner: {key: "hello"}};
 	var setProp = canValue.to(outer, "inner.key");
 
