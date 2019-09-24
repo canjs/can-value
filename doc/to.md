@@ -11,9 +11,9 @@
   `keyObservable.value`.
 
   ```js
-  import {DefineMap, value} from "can";
+  import { ObservableObject, value } from "can";
 
-  const outer = new DefineMap({
+  const outer = new ObservableObject({
     inner: {
       key: "hello"
     }
@@ -22,8 +22,7 @@
   const keyObservable = value.to(outer, "inner.key");
 
   keyObservable.value = "aloha";
-  console.log( outer.inner.key ) //-> "aloha"
-
+  console.log(outer.inner.key); //-> "aloha"
   ```
   @codepen
 

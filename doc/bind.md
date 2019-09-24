@@ -10,9 +10,9 @@
   `outer.inner.key` is updated, and vice versa.
 
   ```js
-  import {DefineMap, value} from "can";
+  import { ObservableObject, value } from "can";
 
-  const outer = new DefineMap({
+  const outer = new ObservableObject({
     inner: {
       key: "hello"
     }
@@ -21,12 +21,11 @@
   const keyObservable = value.bind(outer, "inner.key");
 
   // reading `keyObservable.value`, we get the value at `outer.inner.key`
-  console.log( keyObservable.value ); //-> "hello"
+  console.log(keyObservable.value); //-> "hello"
 
   // writing to `keyObservable.value` will change the value at `outer.inner.key`
   keyObservable.value = "aloha";
-  console.log( outer.inner.key ); //->"aloha"
-
+  console.log(outer.inner.key); //->"aloha"
   ```
   @codepen
 
