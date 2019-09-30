@@ -11,16 +11,16 @@
   update `outer.inner.key`.
 
   ```js
-  import {DefineMap, value} from "can";
+  import { ObservableObject, value} from "can";
 
-  const outer = new DefineMap({
+  const outer = new ObservableObject({
     inner: {
       key: "hello"
     }
   });
 
   const keyObservable = value.from(outer, "inner.key");
-  console.log( keyObservable.value ); //-> "hello"
+  console.log(keyObservable.value); //-> "hello"
 
   try {
     keyObservable.value = "aloha";

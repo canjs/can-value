@@ -11,19 +11,19 @@
   `person` observable. The value of the observable is read with `fullName.value`:
 
   ```js
-  import {value, Reflect as canReflect} from "can";
+  import { value, Reflect as canReflect } from "can";
 
   const first = value.with("Grace");
   const last = value.with("Murray");
 
-  const fullName = value.returnedBy( () => {
+  const fullName = value.returnedBy(() => {
     return first.value + " " + last.value;
-  } );
+  });
 
-  console.log( fullName.value ); //-> "Grace Murray"
+  console.log(fullName.value); //-> "Grace Murray"
 
   const handler = newValue => {
-    console.log( newValue ); //-> "Grace Hopper"
+    console.log(newValue); //-> "Grace Hopper"
   };
 
   canReflect.onValue(fullName, handler);
@@ -46,14 +46,14 @@
   This form is similar to [can-value.with].  But it can be used to "clean up" values as follows:
 
   ```js
-  import {value} from "can";
+  import { value } from "can";
 
   var age = value.returnedBy(function(lastSet){
     return lastSet == null ? 0 : +lastSet;
   });
-  age.value //-> 0
+  console.log(age.value); //-> 0
   age.value = "5";
-  age.value //-> 5
+  console.log(age.value); //-> 5
   ```
   @codepen
 

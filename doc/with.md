@@ -9,23 +9,21 @@
   It can observed using [can-reflect].
 
   ```js
-  import {value} from "can";
+  import { value } from "can";
 
   const number = value.with("one");
-
-  console.log( number.value ); //-> "one"
+  console.log(number.value); //-> "one"
 
   number.value = "two";
-  console.log( number.value ); //-> "two"
+  console.log(number.value); //-> "two"
 
   const handler = function(newValue) {
-    console.log( newValue ); //-> "three"
+    console.log(newValue); //-> "three"
   };
   canReflect.onValue(number, handler);
   number.value = "three";
 
   canReflect.offValue(number, handler);
-
   ```
   @codepen
 
