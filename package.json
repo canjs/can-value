@@ -45,7 +45,7 @@
   "devDependencies": {
     "can-reflect-dependencies": "^1.0.0",
     "can-simple-map": "^4.0.1",
-    "jshint": "^2.9.1",
+    "jshint": "^2.11.1",
     "steal": "^1.6.5",
     "steal-qunit": "^2.0.0",
     "steal-tools": "^1.11.3",
